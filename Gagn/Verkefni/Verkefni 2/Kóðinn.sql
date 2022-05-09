@@ -1,23 +1,27 @@
-﻿-- -------------------------------------- SMÁVEGIS UM TRIGGER Í MYSQL ----------------------------------
 
--- 1:  Trigger er sérstök function sem gansett með því að gefa SQL skipanir(insert, update og jafnvel delete)
--- 2:  Trigger eru skilgreindur til að fara í gang við ákveðna aðgerð í ákveðinni töflu
--- 3:  Trigger getur keyrt sinn kóða á undan eða eftir þeirri skipun sem ræsir hann
--- 4:  Trigger hefur aðgang að þeim gögnum sem gefin eru upp í SQL skipunum(new / old)
-
--- Lesefni:  http://www.mysqltutorial.org/mysql-triggers.aspx
+use studytracker;
 
 
 select * from studentstatus;
+select * from registration;
 -- Trigger template(before insert):
 delimiter $$
-create trigger nafn_a_trigger 
-before insert on nafn_a_töflu
+drop trigger if exists kalli;
+create trigger kalli 
+before insert on registration
 for each row 
 begin
-    -- Kóðinn sem triggerinn keyrir 
-    -- ÁÐUR en insert(before insert) into kóðinn keyrir
+    declare msg varchar(50);
+    if (StudentStatus(2) | StudentStatus(3) | StudentStatus(4) | StudentStatus(5) | StudentStatus(6)) then
+            set msg = concat('student must be virkur');
+            signal sqlstate '45000' set message_text = msg;
+     end if;
 end $$
+
+insert into registration(studentID, courseNumber, grade, semesterID) Values(1,'DANS2BM05AT',7,11)
+
+select StudentStatus(15);
+
 
 
 -- Trigger template(after insert):
