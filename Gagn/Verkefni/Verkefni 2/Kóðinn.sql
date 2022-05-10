@@ -12,7 +12,6 @@ before insert on registration
 for each row 
 begin
     declare msg varchar(50);
-
     if (StudentStatus(New.studentId ) in(2,3,4,5,6)) then
             set msg = concat('student must be virkur');
             signal sqlstate '45000' set message_text = msg;
@@ -39,7 +38,7 @@ end €€
 
 UPDATE registration SET courseNumber = 'DANS2BM05AT', grade = 6, semesterID = 6 where registrationID = 645
 
-búa til stored procedure sem tekur inn upplýsingar sem þarf til að skrá inn í students töfluna
+búa til stored procedure sem tekur  inn upplýsingar sem þarf til að skrá inn í students töfluna
 stored procedurinn insertar þessum gögnum inn í students töfluna og 
 insertar inn í registration töfluna eftir gildunum sem eru inni í track corses töflunni
 

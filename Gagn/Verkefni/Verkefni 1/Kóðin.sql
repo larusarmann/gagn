@@ -76,10 +76,38 @@ begin
 end €€
 -- Klára seinna ..........................................................................................................................................................
 
--- liður 8
+-- 8
+select * from students 
+drop function if exists hlaupar;
+
+delimiter €€
+create function hlaupar(leap int)
+returns int
+ begin
+    select YEAR(dob) % 4 = 0 from Students as leap;
+    -- true or false seinna
+ end €€
+-- 1996 og 2000 LEAP YEARS
+delimiter;
+
+ -- 9 
+select * from Students
 
 
--- Liður 9
+delimiter €€
+drop function if exists ageCalculation €€
+create function ageCalculation(givenDATE int)
+returns int
+deterministic
+ begin
+    declare givenDATE int;
+    declare age int;
+    SELECT DATEDIFF(NOW(),givenDATE)/365.25 into age;
+ return age;
+ end €€
+ delimiter €€
+ 
+select ageCalculation(1999-08-11);
 
 
 -- Liður 10
