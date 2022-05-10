@@ -1,4 +1,3 @@
-
 use studytracker;
 
 select * from students;
@@ -41,14 +40,14 @@ UPDATE registration SET courseNumber = 'DANS2BM05AT', grade = 6, semesterID = 6 
 
 select * from students
 select * from registration
+select * from courses;
 
 delimiter €€
 drop procedure if exists lidur3 €€
 create procedure lidur3(student_id int)
 begin
-    select sum(grade)*5 as 'samtals einingar' from registration where studentID = student_id and grade <= 5;
+    select sum(b.courseCredits) as 'samtals einingar' from registration a inner join courses b on b.courseNumber = a.courseNumber where a.studentID = student_id and a.grade >= 5;
 end €€
-
 call lidur3(1)
 
 

@@ -93,23 +93,20 @@ DETERMINISTIC
 select hlaupar();
 
  -- 9 
-select * from Students
-
 
 delimiter €€
 drop function if exists ageCalculation €€
-create function ageCalculation(givenDATE int)
+create function ageCalculation(givenDATE date)
 returns int
 deterministic
  begin
-    declare givenDATE int;
     declare age int;
-    SELECT DATEDIFF(NOW(),givenDATE)/365.25 into age;
+    select TIMESTAMPDIFF(YEAR,givenDATE,CURDATE()) into age;
  return age;
  end €€
  delimiter €€
  
-select ageCalculation(1999-08-11);
+select ageCalculation('1999-05-11');
 
 
 -- Liður 10
