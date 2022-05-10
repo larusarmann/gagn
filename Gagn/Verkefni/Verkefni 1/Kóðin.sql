@@ -81,14 +81,16 @@ select * from students
 drop function if exists hlaupar;
 
 delimiter €€
-create function hlaupar(leap int)
+create function hlaupar()
 returns int
+DETERMINISTIC
  begin
-    select YEAR(dob) % 4 = 0 from Students as leap;
+	declare ja int;
+    select YEAR(dob) % 4 = 0 from Students into ja;
     -- true or false seinna
+    return ja;
  end €€
--- 1996 og 2000 LEAP YEARS
-delimiter;
+select hlaupar();
 
  -- 9 
 select * from Students
