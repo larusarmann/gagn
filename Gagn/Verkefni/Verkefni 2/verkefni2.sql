@@ -53,14 +53,24 @@ call lidur3(1)
 
 
 
+búa til stored procedure sem tekur  inn upplýsingar sem þarf til að skrá inn í students töfluna
+stored procedurinn insertar þessum gögnum inn í students töfluna og 
+insertar inn í registration töfluna eftir gildunum sem eru inni í track corses töflunni
 
+select * from registration;
+select * from students;
 
-
-
-
--- búa til stored procedure sem tekur  inn upplýsingar sem þarf til að skrá inn í students töfluna
--- stored procedurinn insertar þessum gögnum inn í students töfluna og 
--- insertar inn í registration töfluna eftir gildunum sem eru inni í track corses töflunni
+delimiter €€
+drop procedure if exists lidur4 €€
+create procedure lidur4( first_name varchar(20), last_name varchar(30), Dateob date, trackID int)
+begin
+	insert into students(firstName,lastName,dob,trackID,registerDate, studentStatus) values(first_name,last_name,Dateob,trackID,curdate(), 1);
+    insert into registration select null as registrationID,
+    LAST_INSERT_ID() as studentID ,courseNumber,curdate()
+    as processDate,0 as grade ,semester as semesterID from trackcourses
+    where trackID = trackID and mandatory = 1;
+end €€
+call lidur4('Lárus', 'Ármann', '2003-11-03', 9)
 
 -- insert into students
 -- SELECT LAST_INSERT_ID() into yourVariable
