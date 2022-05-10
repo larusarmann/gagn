@@ -78,19 +78,18 @@ end €€
 
 -- 8
 select * from students 
-drop function if exists hlaupar;
 
 delimiter €€
-create function hlaupar()
-returns int
+drop function if exists hlaupar;
+create function hlaupar(dob date)
+returns bool
 DETERMINISTIC
  begin
-	declare ja int;
-    select YEAR(dob) % 4 = 0 from Students into ja;
-    -- true or false seinna
+	declare ja bool;
+    select YEAR(dob) % 4 = 0 into ja;
     return ja;
  end €€
-select hlaupar();
+select hlaupar('1996-08-08');
 
  -- 9 
 
