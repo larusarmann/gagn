@@ -38,9 +38,6 @@ end €€
 
 UPDATE registration SET courseNumber = 'DANS2BM05AT', grade = 6, semesterID = 6 where registrationID = 645
 
-select * from students
-select * from registration
-select * from courses;
 
 delimiter €€
 drop procedure if exists lidur3 €€
@@ -70,7 +67,7 @@ begin
     as processDate,0 as grade ,semester as semesterID from trackcourses
     where trackID = trackID and mandatory = 1;
 end €€
-call lidur4('Lárus', 'Ármann', '2003-11-03', 9)
+call lidur4('Lárus', 'Kjartansson', '2003-11-03', 9)
 
 -- insert into students
 -- SELECT LAST_INSERT_ID() into yourVariable

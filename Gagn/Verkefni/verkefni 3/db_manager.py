@@ -29,25 +29,35 @@ class DbManager:
         }
         params = [json.dumps(course, ensure_ascii=False)]
 
-        response_json = self.execute_sql_procedure('AddCourse', params)
+        response_json = self.execute_sql_procedure('addCourse', params)
         return json.loads(response_json[0][0])
 
-
     def single_course(self, course_number):
-        pass  
+        params = [course_number]  
+        return self.execute_sql_procedure('readCourse', params)
 
-
-    def update_course(self, course_number, course_name, course_credits):
-        pass
-
+    def update_course(self, oldCourse, course_number, course_name, course_credits):
+        params = [oldCourse, course_number, course_name, course_credits]
+        return self.execute_sql_procedure('updateCourse', params)
 
     def delete_course(self, course_number):
-        pass
+        params = [course_number]  
+        return self.execute_sql_procedure('deleteCourse', params)
 
 
     # ---------------------------------------------------------------------------------------
     def add_track_course(self, course_number, semester_id, is_mandatory):
-        pass
+        trackcourse = {
+            "course_number": course_number,
+            "semester_id": semester_id,
+            "is_mandatory": is_mandatory
+        }
+        params = [json.dumps(trackcourse, ensure_ascii=False)]
+
+        response_json = self.execute_sql_procedure('AddTrackCourse', params)
+        params = [course_number,semester_id,is_mandatory]
+
+        return json.loads(response_json[0][0])
 
 
     def single_track_course(self, track_id, course_number):
@@ -115,3 +125,19 @@ class DbManager:
             self.status = error
         finally:
             return results
+
+
+db = DbManager()
+
+print(db.status)
+print(db.single_course('DANS2BM05AT'))
+print(db.single_course('GAGN3FS05EU'))
+print(db.update_course('DANS2BM05AT', 'LÁRU2UN05CU', 'Lárus Ármann Kjartansson', 5))
+# print(db.delete_course('LÁRU2UN05CU'))
+print(db.single_course('LÁRU2UN05CU'))
+
+# db.add_track_course('GAGN3FS05EU', 1, 0)
+# print(db.student_list_json_II())
+# print(db.single_student(14))
+# print(db.add_student_json('Komaso','Takida','2000-05-11', 9))
+# print(db.add_student('Anita','Schmidt','2001-09-27', 9))
