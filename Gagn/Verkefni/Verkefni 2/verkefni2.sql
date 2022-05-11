@@ -68,10 +68,9 @@ begin
     where trackID = trackID and mandatory = 1;
 end €€
 call lidur4('Lárus', 'Kjartansson', '2003-11-03', 9);
+-- klára
 
--- insert into students
--- SELECT LAST_INSERT_ID() into yourVariable
--- insert into registration as select null as registrationID,LAST_INSERT_ID() as studentID ,courseNumber,curdate() as processDate,0 as grade ,semester as semesterID from trackcourses where trackID = 9 and mandatory = 1
+
 
 select * from students
 select * from trackcourses where mandatory = 1

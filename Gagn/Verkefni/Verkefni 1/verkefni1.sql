@@ -1,12 +1,3 @@
-use studytracker;
-select count(*) from Students;
-select count(*) from Registration;
-select * from Students;
-select * from Semesters;
-select * from Registration;
-select * from courses;
-select * from TrackCourses;
-select * from tracks;
 
 -- 2. Birta upplýsingar um einn ákveðinn áfanga með Stored Procedure.
 delimiter €€
@@ -61,7 +52,6 @@ drop procedure if exists deleteCourse €€
 create procedure deleteCourse(course_number char(15))
 begin
 	Delete from courses where courseNumber = course_number;
-
 end €€
 
 -- Test
@@ -87,17 +77,23 @@ select FjoldAfanga();
 
 -- 7. Function sem telur einingar sem eru í boði á ákveðinni námsleið
 delimiter €€
-create function brautarEining(einingar int)
+drop function if exists brautarEining;
+create function brautarEining(braut int)
 Returns int
+deterministic
 begin
-	select SUM(courses.courseCredits) as Heildareiningar
-    from courses inner join trackcourses On courses.courseNumber=trackcourses.courseNumber;
+	declare heild int;
+	select sum(a.courseCredits) as Heildareiningar 
+    from courses a inner join trackcourses b On a.courseNumber= b.courseNumber where braut = b.trackID into heild ;
+    return heild;
 end €€
--- Klára seinna ..........................................................................................................................................................
+
+-- Test
+select brautarEining(3); -- braut sem er tóm í DB
+select brautarEining(9); -- eina brautin í DB
+
 
 -- 8. Skrifa Function sem kannar hvort að ákv. dagsetning(date) sé á hlaupári
-select * from students 
-
 delimiter €€
 drop function if exists hlaupar;
 create function hlaupar(dob date)
@@ -108,10 +104,12 @@ DETERMINISTIC
     select YEAR(dob) % 4 = 0 into ja;
     return ja;
  end €€
+ 
+-- Test
 select hlaupar('1996-08-08');
 
- -- 9. Skrifa Function sem reiknar út aldur ef upp er gefin dagsetning 
 
+-- 9. Skrifa Function sem reiknar út aldur ef upp er gefin dagsetning 
 delimiter €€
 drop function if exists ageCalculation €€
 create function ageCalculation(givenDATE date)
@@ -123,20 +121,45 @@ deterministic
  return age;
  end €€
  delimiter €€
- 
-select ageCalculation('1999-05-11');
+
+-- Test 
+select ageCalculation('1999-05-10');
+select ageCalculation('1999-05-25');
 
 
 -- 10. Stored Procedure sem skilar öllum nemendum á ákveðinni önn(semester)
-select * from semesters;
-select * from students;
-select * from studentstatus;
-select * from tracks;
-select * from divisions
-
 delimiter €€
 drop procedure if exists allirNemar €€
-create procedure allirNemar(semesterID int)
+create procedure allirNemar(onn int)
 begin
-	
+select
+	S.studentID as nemandanumer, S.firstName as Fornafn, S.lastName as Eftirnafn, S.dob as Fæðingardagur, 
+    ss.statusName as status, T.trackName as námsleið, D.divisionName as brautarheiti, C.schoolname as skólaheiti
+		FROM students S 
+		inner join registration R on R.studentID = S.studentID
+		inner join semesters o on o.semesterID = R.semesterID
+		inner join studentStatus as ss on ss.ID = S.studentStatus
+		inner join tracks T on T.trackID = S.trackID
+		inner join divisions D on T.divisionID
+		inner join schools C on C.schoolID = D.schoolID
+		where R.semesterID = onn;
 end €€
+
+-- Test
+call allirNemar(15);
+call allirNemar(7);
+
+-- studentID - students, registration
+-- firstName,lastName eða samsett með concat() fallinu - students
+-- dob - students
+-- statusName - studentstatus
+-- trackName - tracks
+-- divisionName - divisions
+-- SchoolName - schools
+-- -------------------------------------------------------------------------------------------------------------------------------
+-- semester.semesterID = registration.semesterID
+-- registration.studentID = students.studentID
+-- students.studentStatus = studentStatus.ID
+-- tracks.trackID = students.trackID
+-- divisions.divisonID = tracks.divisionID
+-- schools.schoolID = divisions.schoolID
