@@ -1,9 +1,5 @@
 use studytracker;
 
-select * from students;
-select * from studentstatus;
-select * from registration;
-
 delimiter $$
 drop trigger if exists lidur1;
 create trigger lidur1
@@ -17,9 +13,10 @@ begin
      end if;
 end $$
 
+-- Test
 insert into registration(studentID, courseNumber, grade, semesterID) Values(1,'DANS2BM05AT',7,11)
-
 insert into registration(studentID, courseNumber, grade, semesterID) Values(15,'DANS2BM05AT',7,11)
+
 
 select * from registration;
 delimiter €€
@@ -36,6 +33,7 @@ begin
      end if;
 end €€
 
+-- Test
 UPDATE registration SET courseNumber = 'DANS2BM05AT', grade = 6, semesterID = 6 where registrationID = 645
 
 
@@ -45,17 +43,10 @@ create procedure lidur3(student_id int)
 begin
     select sum(b.courseCredits) as 'samtals einingar' from registration a inner join courses b on b.courseNumber = a.courseNumber where a.studentID = student_id and a.grade >= 5;
 end €€
+
+-- Test
 call lidur3(1)
 
-
-
-
-búa til stored procedure sem tekur  inn upplýsingar sem þarf til að skrá inn í students töfluna
-stored procedurinn insertar þessum gögnum inn í students töfluna og 
-insertar inn í registration töfluna eftir gildunum sem eru inni í track corses töflunni
-
-select * from registration;
-select * from students;
 
 delimiter €€
 drop procedure if exists lidur4 €€
@@ -67,11 +58,7 @@ begin
     as processDate,0 as grade ,semester as semesterID from trackcourses
     where trackID = trackID and mandatory = 1;
 end €€
+
+-- Test
 call lidur4('Lárus', 'Kjartansson', '2003-11-03', 9);
--- klára
 
-
-
-select * from students
-select * from trackcourses where mandatory = 1
-select * from tracks
