@@ -31,9 +31,8 @@ begin
 SELECT * FROM Mannfjoldi WHERE sveitarfelag = sveitarNafn;
 end €€
 
--- Test 1 
-call sveitarFelag('Reykjavík');
--- Test 2 
+-- Test 
+call sveitarFelag('Reykjavík'); 
 call sveitarFelag('Kópavogur');
 
 -- 2. Birta yfirlit yfir landssvæði 
@@ -43,6 +42,7 @@ create procedure svaedi(in byrjunTala varchar(30))
 begin
 SELECT * FROM Mannfjoldi WHERE sveitarfelagsNumer LIKE byrjunTala;
 end €€
+
 -- Test 
 call svaedi('1%');
 call svaedi('3%');
@@ -57,6 +57,7 @@ begin
 select SUM(fjoldi) as 'Summa' from Mannfjoldi where extract(Year from dagsetning ) = talan; 
 end €€
 select * from Mannfjoldi;
+
 -- Test 
 call summuAr(2017);
 call summuAr(2018);
@@ -73,11 +74,12 @@ select SUM(fjoldi) as 'Summa' from Mannfjoldi where extract(Year from dagsetning
 select SUM(fjoldi) as 'Summa' from Mannfjoldi where extract(Year from dagsetning ) = ar2 into fjoldiAr2;
 select fjoldiAr2/fjoldiAr;
 end €€
+
 -- Test 
 call hlutfall(2017, 2018);
 
--- 5. Birta mannfjöldabreytingu ákveðins sveitarfélags milli ákveðinna ára 
 
+-- 5. Birta mannfjöldabreytingu ákveðins sveitarfélags milli ákveðinna ára 
 delimiter €€
 drop procedure if exists sveitarHlutfall;
 create procedure sveitarHlutfall(in sveit varchar(30), in ar int, in ar2 int)
@@ -88,30 +90,50 @@ select SUM(fjoldi) as 'Summa' from Mannfjoldi where sveitarfelagsNumer = sveit a
 select SUM(fjoldi) as 'Summa' from Mannfjoldi where sveitarfelagsNumer = sveit and extract(Year from dagsetning ) = ar2 into fjoldiAr2;
 select fjoldiAr2/fjoldiAr;
 end €€
+
 -- Test 
 call sveitarHlutfall('1300', 2017, 2018);
 
--- 6. Birta heildarmannfjölda ákveðins landssvæðis 
 
+-- 6. Birta heildarmannfjölda ákveðins landssvæðis 
 delimiter €€
 drop procedure if exists sveitarHlutfall;
 create procedure sveitarHlutfall(in sveit varchar(30), in ar int)
 begin
 select SUM(fjoldi) as 'Summa' from Mannfjoldi where sveitarfelagsNumer like sveit and extract(Year from dagsetning ) = ar;
 end €€
+
 -- Test 
 call sveitarHlutfall('1%', 2017);
 
 
 -- JSON hlutinn 
-
+drop table if exists MannfjoldiJson;
 create table MannfjoldiJson as 
 select JSON_ARRAYAGG(JSON_OBJECT('SveitarfelagsNumer',sveitarfelagsNumer,'Sveitarfelag',sveitarfelag,'Fjoldi',fjoldi,'Dagsetning',dagsetning)) as jason from Mannfjoldi ;
 
+-- Test
 select jason from MannfjoldiJson;
 
 
-select * from Mannfjoldi;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
